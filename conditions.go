@@ -1,26 +1,9 @@
 package condition
 
-import "fmt"
-
-// Condition single condition struct
-type Condition struct {
-	Key   string
-	Value interface{}
-}
-
 // Conditions conditions need to match
 type Conditions struct {
 	Op   byte //now we only allow eight conditions at most so use byte bit field to get the
 	Spec []Condition
-}
-
-// Match return single condition match the input map or not
-func (con Condition) Match(input map[string]interface{}) bool {
-	if v, ok := input[con.Key]; !ok {
-		return false
-	} else {
-		return v == con.Value
-	}
 }
 
 // Judge judge the conditions with input key-value map
@@ -37,7 +20,6 @@ func (c Conditions) Judge(input map[string]interface{}) bool {
 			index[i] = 0
 		}
 	}
-	fmt.Println(index)
 
 	result := c.Spec[0].Match(input)
 	for i := 0; i < l-1; i++ {
@@ -52,4 +34,18 @@ func (c Conditions) Judge(input map[string]interface{}) bool {
 	}
 
 	return result
+}
+
+// Or append an logical or condition to conditions, Or has lower precedence than And, note that conditions a.Or(b).And(c) means a || (b&&c),
+func (c *Conditions) Or(input Condition) {
+	c.Spec = append(c.Spec, input)
+}
+
+// And append an logical and condition to conditions, And has higher precedence than Or, note that conditions a.Or(b).And(c) means a || (b&&c),
+func (c *Conditions) And(input Condition) {
+	i := len(c.Spec)
+	c.Spec = append(c.Spec, input)
+	if i != 0 {
+		c.Op = c.Op | (0x1 << (uint(i) - 1))
+	}
 }

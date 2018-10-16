@@ -1,9 +1,5 @@
 package condition
 
-import (
-	"fmt"
-)
-
 // Conditions conditions need to match
 type Conditions struct {
 	Operators []byte
@@ -16,8 +12,7 @@ func (c Conditions) Judge(input map[string]interface{}) bool {
 	if l == 0 {
 		return true
 	}
-	fmt.Println(c.Operators)
-	index := make([]int, l-1)
+	index := make([]byte, l-1)
 	j := -1
 	for i := 0; i < l-1; i++ {
 		if i%8 == 0 {

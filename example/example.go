@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 
 	condition "github.com/victor-simida/condition_match"
@@ -22,6 +23,13 @@ func main() {
 		Key:   "key3",
 		Value: "3",
 	})
+
+	o, _ := json.Marshal(&c)
+	fmt.Println(c.Operators)
+	fmt.Println(o)
+	fmt.Println(string(o))
+	fmt.Println(len(o))
+	fmt.Println(len(string(o)))
 
 	input := make(map[string]interface{})
 	input["key1"] = "1"
